@@ -11,7 +11,7 @@ const inputDescripcion = document.getElementById('descripcion');
 const inputEstado = document.getElementById('estado');
 const tbody = document.querySelector('#tablaTareasBody');
 let estoyCreando = true
-// let idContacto = null
+let idTarea = null
 // //verificar si el localstorage tiene contactos, si no tiene hago un array vacio
 const listaTareas = JSON.parse(localStorage.getItem('tareasKey')) || [];
 
@@ -32,8 +32,8 @@ const crearTarea = ()=>{
     guardarLocalStorage();
     //mostrar un mensaje al usuario final
     Swal.fire({
-        title: "Contacto creado!",
-        text: `El contacto ${inputNombre.value} fue creado correctamente`,
+        title: "Tarea creada!",
+        text: `La tarea ${inputNombre.value} fue creada correctamente`,
         icon: "success",
         confirmButtonText: "Ok",
     });
@@ -66,7 +66,8 @@ const dibujarFila = (itemTarea, fila)=>{
               <td>${itemTarea.nombre}</td>
               <td>${itemTarea.descripcion}</td>
               <td>${itemTarea.estado}</td>
-              <td></td>
+              <td>${itemTarea.estado}</td>
+              <td>${itemTarea.estado}</td>
                <td>
                 <button
                   type="button"
@@ -77,11 +78,11 @@ const dibujarFila = (itemTarea, fila)=>{
                 <button
                   type="button"
                   class="btn btn-warning btn-sm me-2 btn-editar"
-                  onclick="prepararContacto('${itemTarea.id}')"
+                  onclick="prepararTarea('${itemTarea.id}')"
                 >
                   <i class="bi bi-pencil"></i>
                 </button>
-                <button type="button" class="btn btn-danger btn-sm btn-borrar" onclick="borrarContacto('${itemTarea.id}')">
+                <button type="button" class="btn btn-danger btn-sm btn-borrar" onclick="borrarTarea('${itemTarea.id}')">
                   <i class="bi bi-trash"></i>
                 </button>
               </td>
@@ -89,85 +90,73 @@ const dibujarFila = (itemTarea, fila)=>{
     `
 }
 
-// window.borrarContacto = (id)=>{
-//   Swal.fire({
-//   title: "Estas seguro que quieres eliminar el contacto?",
-//   text: "Los cambios seran permanentes!",
-//   icon: "warning",
-//   showCancelButton: true,
-//   confirmButtonColor: "#3085d6",
-//   cancelButtonColor: "#d33",
-//   confirmButtonText: "Borrar",
-//   cancelButtonText: "Cancelar"
-// }).then((result) => {
-//   if (result.isConfirmed) {
-//     //aqui agrego la logica para borrar
-//     //tengo que buscar en que posicion esta el contacto con el id que quiero borrar
-//     const indiceContacto = agenda.findIndex((contacto)=> contacto.id === id)
-//     //con splice borramos el elemento de determinada posicion del array
-//     agenda.splice(indiceContacto, 1)
-//     //actualizar el localStorage
-//     guardarLocalStorage()
-//     //actualizar la tabla
-//     tbody.children[indiceContacto].remove()
-//     //actualizar el numero de fila del array
+window.borrarTarea = (id)=>{
+  Swal.fire({
+  title: "Estas seguro que quieres eliminar la tarea?",
+  text: "Los cambios seran permanentes!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Eliminar",
+  cancelButtonText: "Cancelar"
+}).then((result) => {
+  if (result.isConfirmed) {
+    //aqui agrego la logica para borrar
+    //tengo que buscar en que posicion esta el contacto con el id que quiero borrar
+    const indiceTarea = listaTareas.findIndex((tarea)=> tarea.id === id)
+    //con splice borramos el elemento de determinada posicion del array
+    listaTareas.splice(indiceTarea, 1)
+    //actualizar el localStorage
+    guardarLocalStorage()
+    //actualizar la tabla
+    tbody.children[indiceTarea].remove()
+    //actualizar el numero de fila del array
 
-//     Swal.fire({
-//       title: "Contacto eliminado!",
-//       text: "El contacto fue eliminado correctamente",
-//       icon: "success"
-//     });
+    Swal.fire({
+      title: "Tarea eliminada!",
+      text: "La tarea fue eliminada correctamente",
+      icon: "success"
+    });
 
-//   }
-// });
-// }
+  }
+});
+}
 
-// window.prepararContacto = (id)=>{
-//   //cargar los datos del contacto para que los vea el usuario
-//   const contactoBuscado = agenda.find((contacto)=> contacto.id === id)
-//   console.log(contactoBuscado)
-//   //mostrar los datos del contacto en el form
-//   inputNombre.value = contactoBuscado.nombre
-//   inputApellido.value = contactoBuscado.apellido
-//   inputTelefono.value = contactoBuscado.telefono
-//   inputEmail.value = contactoBuscado.email
-//   inputImagen.value = contactoBuscado.imagen
-//   inputEmpresa.value = contactoBuscado.empresa
-//   inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo
-//   inputDireccion.value = contactoBuscado.direccion
-//   inputNotas.value = contactoBuscado.notas
-//   idContacto = id
-//   //cambio la variable que control el crear/editar
-//   estoyCreando = false
-//   //abrir el modal
-//   modalFormularioContacto.show()
-// }
+window.prepararTarea = (id)=>{
+  //cargar los datos del contacto para que los vea el usuario
+  const tareaBuscada = listaTareas.find((tarea)=> tarea.id === id)
+  console.log(tareaBuscada)
+  //mostrar los datos del contacto en el form
+  inputNombre.value = tareaBuscada.nombre
+  inputDescripcion.value = tareaBuscada.descripcion
+  inputEstado.value = tareaBuscada.estado
+  idTarea = id
+  //cambio la variable que control el crear/editar
+  estoyCreando = false
+  //abrir el modal
+  modalFormularioTarea.show()
+}
 
-// const editarContacto = ()=>{
-//   console.log('tengo que editar')
-//   //buscar en que posicion del array est el contacto con ID
-//   const indiceContacto = agenda.findIndex((contacto)=> contacto.id === idContacto)
-//   //modificar el contacto
-//   agenda[indiceContacto].nombre = inputNombre.value
-//   agenda[indiceContacto].apellido = inputApellido.value
-//   agenda[indiceContacto].telefono = inputTelefono.value
-//   agenda[indiceContacto].email = inputEmail.value
-//   agenda[indiceContacto].imagen = inputImagen.value
-//   agenda[indiceContacto].empresa = inputEmpresa.value
-//   agenda[indiceContacto].puestoTrabajo = inputPuestoTrabajo.value
-//   agenda[indiceContacto].direccion = inputDireccion.value
-//   agenda[indiceContacto].notas = inputNotas.value
-//   //actualizar el localStorage
-//   guardarLocalStorage()
-//   //actualizar fila de la tabla
-//   cargarContactos()
-//   //cerrar el modal
-//   modalFormularioContacto.hide()
+const editarTarea = ()=>{
+  console.log('tengo que editar')
+  //buscar en que posicion del array est el contacto con ID
+  const indiceTarea = listaTareas.findIndex((tarea)=> tarea.id === idTarea)
+  //modificar el contacto
+  listaTareas[indiceTarea].nombre = inputNombre.value
+  listaTareas[indiceTarea].descripcion = inputDescripcion.value
+  listaTareas[indiceTarea].estado = inputEstado.value
+  //actualizar el localStorage
+  guardarLocalStorage()
+  //actualizar fila de la tabla
+  cargarTarea()
+  //cerrar el modal
+  modalFormularioTarea.hide()
 
-//   //todo: mostrar una ventana de sweetAlert para indicar que elcontacto fue editado correctamente 
+  //todo: mostrar una ventana de sweetAlert para indicar que elcontacto fue editado correctamente 
 
   
-// }
+}
 
 
 //manejadores de eventos
@@ -183,7 +172,7 @@ formularioTarea.addEventListener('submit', (e)=>{
     if(estoyCreando){
       crearTarea()
     }else{
-      editarContacto()
+      editarTarea()
     }
 })
 
