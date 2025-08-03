@@ -3,7 +3,6 @@ import Tareas from "./tareas.js";
 
 // elementos del DOM
 const btnAgregarTarea = document.getElementById('btnAgregarTarea');
-
 const modalFormularioTarea = new bootstrap.Modal(document.getElementById('tareaModal'));
 const formularioTarea = document.getElementById('formTarea');
 const inputNombre = document.getElementById('nombre');
@@ -12,7 +11,7 @@ const inputEstado = document.getElementById('estado');
 const tbody = document.querySelector('#tablaTareasBody');
 let estoyCreando = true
 let idTarea = null
-// //verificar si el localstorage tiene contactos, si no tiene hago un array vacio
+// //verificar si el localstorage tiene tareas, si no tiene hago un array vacio
 const listaTareas = JSON.parse(localStorage.getItem('tareasKey')) || [];
 
 // //Funciones
@@ -94,7 +93,7 @@ window.borrarTarea = (id)=>{
   Swal.fire({
   title: "Estas seguro que quieres eliminar la tarea?",
   text: "Los cambios seran permanentes!",
-  icon: "warning",
+  imageUrl: "https://emojipedia.org/_next/image?url=https%3A%2F%2Fblog.emojipedia.org%2Fcontent%2Fimages%2F2025%2F07%2FEmojipedia-Blog-What-Is-An-Emoji-In-2025.jpg&w=1500&q=75",
   showCancelButton: true,
   confirmButtonColor: "#3085d6",
   cancelButtonColor: "#d33",
@@ -103,7 +102,7 @@ window.borrarTarea = (id)=>{
 }).then((result) => {
   if (result.isConfirmed) {
     //aqui agrego la logica para borrar
-    //tengo que buscar en que posicion esta el contacto con el id que quiero borrar
+    //tengo que buscar en que posicion esta la tarea con el id que quiero borrar
     const indiceTarea = listaTareas.findIndex((tarea)=> tarea.id === id)
     //con splice borramos el elemento de determinada posicion del array
     listaTareas.splice(indiceTarea, 1)
@@ -113,10 +112,19 @@ window.borrarTarea = (id)=>{
     tbody.children[indiceTarea].remove()
     //actualizar el numero de fila del array
 
+    // Swal.fire({
+    //   title: "Tarea eliminada!",
+    //   text: "La tarea fue eliminada correctamente",
+    //   icon: "success"
+    // });
+
     Swal.fire({
-      title: "Tarea eliminada!",
-      text: "La tarea fue eliminada correctamente",
-      icon: "success"
+    title: "Tarea eliminada!",
+    text: "La tarea fue eliminada correctamente",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwQDZC9BNrdWMoACX0xjzPsSD5TsIaIF28UCsZwlBTp1zY3nYidEw4DjcHqZETQv9DOHU&usqp=CAU",
+    imageWidth: 400,
+    imageHeight: 300,
+    imageAlt: "emoji sufriendo"
     });
 
   }
@@ -124,10 +132,10 @@ window.borrarTarea = (id)=>{
 }
 
 window.prepararTarea = (id)=>{
-  //cargar los datos del contacto para que los vea el usuario
+  //cargar los datos de la tarea para que los vea el usuario
   const tareaBuscada = listaTareas.find((tarea)=> tarea.id === id)
   console.log(tareaBuscada)
-  //mostrar los datos del contacto en el form
+  //mostrar los datos de la tarea en el form
   inputNombre.value = tareaBuscada.nombre
   inputDescripcion.value = tareaBuscada.descripcion
   inputEstado.value = tareaBuscada.estado
@@ -140,9 +148,9 @@ window.prepararTarea = (id)=>{
 
 const editarTarea = ()=>{
   console.log('tengo que editar')
-  //buscar en que posicion del array est el contacto con ID
+  //buscar en que posicion del array est la tarea con ID
   const indiceTarea = listaTareas.findIndex((tarea)=> tarea.id === idTarea)
-  //modificar el contacto
+  //modificar la tarea
   listaTareas[indiceTarea].nombre = inputNombre.value
   listaTareas[indiceTarea].descripcion = inputDescripcion.value
   listaTareas[indiceTarea].estado = inputEstado.value
@@ -154,7 +162,14 @@ const editarTarea = ()=>{
   modalFormularioTarea.hide()
 
   //todo: mostrar una ventana de sweetAlert para indicar que elcontacto fue editado correctamente 
-
+  Swal.fire({
+  title: "Cambios guardados!",
+  text: "Los cambios se guardaron correctamente",
+  imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyKmnLL8pwpE9HoZEoAE5UCl31L6dVMm8HikPZlDZ3VTvpuFjfzI8anQgNqTsBDO2_WDw&usqp=CAU",
+  imageWidth: 400,
+  imageHeight: 300,
+  imageAlt: "Goku de dragon ball z"
+  });
   
 }
 
@@ -168,7 +183,7 @@ btnAgregarTarea.addEventListener('click', ()=>{
 
 formularioTarea.addEventListener('submit', (e)=>{
     e.preventDefault()
-    //aqui tengo que crear/editar un contacto
+    //aqui tengo que crear/editar una tarea
     if(estoyCreando){
       crearTarea()
     }else{
