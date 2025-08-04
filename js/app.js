@@ -30,7 +30,7 @@ const crearTarea = ()=>{
     Swal.fire({
     title: "Tarea creada!",
     text: `La tarea "${inputNombre.value}" fue creada correctamente`,    
-    imageUrl: "https://preview.redd.it/im-looking-for-an-emoticon-like-this-i-looked-everywhere-v0-edwtnntfxs3e1.png?width=640&crop=smart&auto=webp&s=e951a6cbb6b0282166cf7f5fdc2f288a2c7947f8",
+    imageUrl: "https://media.tenor.com/M63nflRRzgMAAAAM/rjumen-laugh-man.gif",
     imageWidth: 400,
     imageHeight: 300,
     imageAlt: "emoji positivo"
@@ -135,7 +135,7 @@ window.borrarTarea = (id)=>{
   Swal.fire({
   title: "Estas seguro que quieres eliminar la tarea?",
   text: "Los cambios seran permanentes!",
-  imageUrl: "https://emojipedia.org/_next/image?url=https%3A%2F%2Fblog.emojipedia.org%2Fcontent%2Fimages%2F2025%2F07%2FEmojipedia-Blog-What-Is-An-Emoji-In-2025.jpg&w=1500&q=75",
+  imageUrl: "https://i.gifer.com/origin/b9/b9b3c90a6e423029ca9977873d2a6ba4_w200.gif",
   showCancelButton: true,
   confirmButtonColor: "#3085d6",
   cancelButtonColor: "#d33",
@@ -156,7 +156,7 @@ window.borrarTarea = (id)=>{
     Swal.fire({
     title: "Tarea eliminada!",
     text: "La tarea fue eliminada correctamente",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwQDZC9BNrdWMoACX0xjzPsSD5TsIaIF28UCsZwlBTp1zY3nYidEw4DjcHqZETQv9DOHU&usqp=CAU",
+    imageUrl: "https://i.pinimg.com/originals/dc/e8/60/dce86066d2ed6d2dae3afed8a9b74fc0.gif",
     imageWidth: 400,
     imageHeight: 300,
     imageAlt: "emoji sufriendo"
@@ -201,7 +201,7 @@ const editarTarea = ()=>{
   Swal.fire({
   title: "Cambios guardados!",
   text: "Los cambios se guardaron correctamente",
-  imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyKmnLL8pwpE9HoZEoAE5UCl31L6dVMm8HikPZlDZ3VTvpuFjfzI8anQgNqTsBDO2_WDw&usqp=CAU",
+  imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrZP3bSLITCmAdc9gpqgDKikxm9iLeQsGQ69JifsOM7mqipBW4HG4x-CiJndaCuqcEnGXRsWdD0dTFKJx_9mYSug7N3qgpl0KyqFq23yNgHVdXl4DnlOuWq8HblcVB_-7GyAXLUnCl_aQ/s1600/coffee-animated-emoji.gif",
   imageWidth: 400,
   imageHeight: 300,
   imageAlt: "Goku de dragon ball z"
@@ -213,19 +213,33 @@ const editarTarea = ()=>{
 //manejadores de eventos
 btnAgregarTarea.addEventListener('click', ()=>{
     limpiarFormulario()
+    formularioTarea.classList.remove('was-validated');
     estoyCreando = true
     modalFormularioTarea.show()
 })
 
-formularioTarea.addEventListener('submit', (e)=>{
-    e.preventDefault()
-    //aqui tengo que crear/editar una tarea
-    if(estoyCreando){
-      crearTarea()
-    }else{
-      editarTarea()
-    }
-})
+formularioTarea.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (!formularioTarea.checkValidity()) {
+    formularioTarea.classList.add('was-validated'); //activa feedback visual
+    Swal.fire({
+      imageUrl: "https://cdn3.emoji.gg/emojis/3670-emoji-loadgun.gif",
+      title: "Datos incompletos!",
+      text: "Completa todos los campos para poder continuar",
+      confirmButtonText: "Ok",
+    });
+    return; //frena la creacion o edicion
+  }
+
+  // Si todo está validado
+  if(estoyCreando){
+    crearTarea();
+  } else {
+    editarTarea();
+  }
+});
+
 
 cargarTarea();
 
