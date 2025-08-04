@@ -9,7 +9,11 @@ main{
     flex-grow: 1;
 }
 
-.tabla{
-    table-layout: fixed; 
-    width: 100%;"
+.texto-limitado {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+

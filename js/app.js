@@ -20,21 +20,19 @@ const guardarLocalStorage = ()=>{
 }
 
 const crearTarea = ()=>{
-    console.log('aqui tengo que crear el contacto')
-    // todo Agregar validaciones
-    // buscar los datos del formulario y crear un objeto contacto
-    const tareaNueva = new Tareas(inputNombre.value, inputDescripcion.value, inputEstado.value)
+    const ahora = new Date().toLocaleString();    // buscar los datos del formulario y crear un objeto contacto
+    const tareaNueva = new Tareas(inputNombre.value, inputDescripcion.value, inputEstado.value, ahora, ahora)
     //guardar el contacto en la agenda de contactos
     listaTareas.push(tareaNueva)
-    console.log(tareaNueva)
     //guardar la agenda en el localstorage
     guardarLocalStorage();
     //mostrar un mensaje al usuario final
     Swal.fire({
-        title: "Tarea creada!",
-        text: `La tarea ${inputNombre.value} fue creada correctamente`,
-        icon: "success",
-        confirmButtonText: "Ok",
+    title: "Tarea creada!",
+    text: `La tarea "${inputNombre.value}" fue creada correctamente`,    imageUrl: "https://preview.redd.it/im-looking-for-an-emoticon-like-this-i-looked-everywhere-v0-edwtnntfxs3e1.png?width=640&crop=smart&auto=webp&s=e951a6cbb6b0282166cf7f5fdc2f288a2c7947f8",
+    imageWidth: 400,
+    imageHeight: 300,
+    imageAlt: "emoji positivo"
     });
     //limpiar el formulario
     limpiarFormulario()
@@ -54,6 +52,11 @@ const cargarTarea = ()=>{
         listaTareas.map((itemTarea, indice)=> dibujarFila(itemTarea, indice+1))
     }else{
         //to do: dibujar un parrafo que diga que no tenemos contactos
+        Swal.fire({
+        title: "No hay tareas para mostrar",
+        icon: "success",
+        confirmButtonText: "Ok",
+    });
     }
     //si tengo, tengo que dibujar las filas en la tabla
 }
@@ -63,31 +66,72 @@ const dibujarFila = (itemTarea, fila)=>{
             <tr>
               <th scope="row">${fila}</th>
               <td>${itemTarea.nombre}</td>
-              <td>${itemTarea.descripcion}</td>
+              <td class="texto-limitado" title="${itemTarea.descripcion}">
+                ${itemTarea.descripcion}
+              </td>
               <td>${itemTarea.estado}</td>
-              <td>${itemTarea.estado}</td>
-              <td>${itemTarea.estado}</td>
+              <td>${itemTarea.creacion}</td>
+              <td>${itemTarea.modificacion}</td>
                <td>
                 <button
                   type="button"
-                  class="btn btn-info btn-sm me-2 btn-ver-detalle"
+                  class="btn btn-info btn-sm me-2 btn-ver-detalle mb-1"
+                  onclick="mostrarTarea('${itemTarea.id}')"
                 >
                   <i class="bi bi-eye"></i>
                 </button>
                 <button
                   type="button"
-                  class="btn btn-warning btn-sm me-2 btn-editar"
+                  class="btn btn-warning btn-sm me-2 btn-editar mb-1"
                   onclick="prepararTarea('${itemTarea.id}')"
                 >
                   <i class="bi bi-pencil"></i>
                 </button>
-                <button type="button" class="btn btn-danger btn-sm btn-borrar" onclick="borrarTarea('${itemTarea.id}')">
+                <button type="button" class="btn btn-danger btn-sm btn-borrar mb-1" onclick="borrarTarea('${itemTarea.id}')">
                   <i class="bi bi-trash"></i>
                 </button>
               </td>
             </tr>
     `
 }
+
+window.mostrarTarea = (id) => {
+  const tareas = listaTareas.find((tarea) => tarea.id === id);
+  if (!tareas) return;
+
+  document.body.innerHTML = `
+    <header>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container">
+          <h4>Detalle de la tarea:</h4>
+        </div>
+      </nav>
+    </header>
+    <main class="container mt-4">
+      <div class="card mt-3">
+        <div class="card-body">
+          <p class="text-center"> <----------------------------------------------------------------------------------------------> </p>
+          <h2 class="card-title text-center mb-5 mt-5">"${tareas.nombre}"</h2>
+          <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
+          <p class="card-text text-center mb-4"><strong>Descripcion:</strong> ${tareas.descripcion}</p>
+          <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
+          <p class="card-text text-center mb-4"><strong>Estado:</strong> ${tareas.estado}</p>
+          <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
+          <p class="card-text text-center mb-4"><strong>Fecha de creacion:</strong> ${tareas.creacion}</p>
+          <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
+          <p class="card-text text-center mb-4"><strong>Ultima modificacion:</strong> ${tareas.modificacion}</p>
+        </div>
+      </div>
+      <a href="./index.html" class="btn btn-info mt-3 ">
+        <i class="bi bi-arrow-left"></i> Volver a la lista
+      </a>
+    </main>
+    <footer class="bg-dark-subtle text-center py-4 mt-4">
+      <p>&copy; Todos los derechos reservados</p>
+    </footer>
+  `;
+};
+
 
 window.borrarTarea = (id)=>{
   Swal.fire({
@@ -111,13 +155,6 @@ window.borrarTarea = (id)=>{
     //actualizar la tabla
     tbody.children[indiceTarea].remove()
     //actualizar el numero de fila del array
-
-    // Swal.fire({
-    //   title: "Tarea eliminada!",
-    //   text: "La tarea fue eliminada correctamente",
-    //   icon: "success"
-    // });
-
     Swal.fire({
     title: "Tarea eliminada!",
     text: "La tarea fue eliminada correctamente",
@@ -140,20 +177,21 @@ window.prepararTarea = (id)=>{
   inputDescripcion.value = tareaBuscada.descripcion
   inputEstado.value = tareaBuscada.estado
   idTarea = id
-  //cambio la variable que control el crear/editar
+  //cambio la variable que controla el crear/editar
   estoyCreando = false
   //abrir el modal
   modalFormularioTarea.show()
 }
 
 const editarTarea = ()=>{
-  console.log('tengo que editar')
+  const ahora = new Date().toLocaleString();
   //buscar en que posicion del array est la tarea con ID
   const indiceTarea = listaTareas.findIndex((tarea)=> tarea.id === idTarea)
   //modificar la tarea
   listaTareas[indiceTarea].nombre = inputNombre.value
   listaTareas[indiceTarea].descripcion = inputDescripcion.value
   listaTareas[indiceTarea].estado = inputEstado.value
+  listaTareas[indiceTarea].modificacion = ahora
   //actualizar el localStorage
   guardarLocalStorage()
   //actualizar fila de la tabla
