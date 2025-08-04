@@ -52,13 +52,6 @@ const cargarTarea = ()=>{
     if(listaTareas.length != 0){
         //recorrer mi lista de tareas y por cada elemento de la lista 
         listaTareas.map((itemTarea, indice)=> dibujarFila(itemTarea, indice+1))
-    }else{
-        //to do: dibujar un parrafo que diga que no tenemos tareas
-        Swal.fire({
-        title: "No hay tareas para mostrar",
-        imageUrl: "https://png.pngtree.com/png-clipart/20231007/original/pngtree-helpless-emoticon-helpless-picture-image_13100937.png",
-        confirmButtonText: "Ok",
-    });
     }
     //si tengo, tengo que dibujar las filas en la tabla
 }
