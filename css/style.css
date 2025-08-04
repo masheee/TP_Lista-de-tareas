@@ -9,11 +9,19 @@ main{
     flex-grow: 1;
 }
 
-.texto-limitado {
+.texto-limitado{
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.fondo{
+  background-image: url('https://images.ctfassets.net/wn7ipiv9ue5v/3CKS57OrdbVTpZYUDepQaw/28ff22663f4369e3a35e64333b9f2963/CSR2_Back_To_The_Future_S1_background__1_.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 80vh; 
 }
 
 

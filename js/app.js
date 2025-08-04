@@ -20,47 +20,50 @@ const guardarLocalStorage = ()=>{
 }
 
 const crearTarea = ()=>{
-    const ahora = new Date().toLocaleString();    // buscar los datos del formulario y crear un objeto contacto
+    const ahora = new Date().toLocaleString();    // buscar los datos del formulario y crear un objeto tarea
     const tareaNueva = new Tareas(inputNombre.value, inputDescripcion.value, inputEstado.value, ahora, ahora)
-    //guardar el contacto en la agenda de contactos
+    //guardar la tarea en la lista de tareas
     listaTareas.push(tareaNueva)
-    //guardar la agenda en el localstorage
+    //guardar la lista de tareas en el localstorage
     guardarLocalStorage();
     //mostrar un mensaje al usuario final
     Swal.fire({
     title: "Tarea creada!",
-    text: `La tarea "${inputNombre.value}" fue creada correctamente`,    imageUrl: "https://preview.redd.it/im-looking-for-an-emoticon-like-this-i-looked-everywhere-v0-edwtnntfxs3e1.png?width=640&crop=smart&auto=webp&s=e951a6cbb6b0282166cf7f5fdc2f288a2c7947f8",
+    text: `La tarea "${inputNombre.value}" fue creada correctamente`,    
+    imageUrl: "https://preview.redd.it/im-looking-for-an-emoticon-like-this-i-looked-everywhere-v0-edwtnntfxs3e1.png?width=640&crop=smart&auto=webp&s=e951a6cbb6b0282166cf7f5fdc2f288a2c7947f8",
     imageWidth: 400,
     imageHeight: 300,
     imageAlt: "emoji positivo"
     });
     //limpiar el formulario
     limpiarFormulario()
-    //dibuje el contacto en la tabla
+    //dibuje la tarea en la tabla
     dibujarFila(tareaNueva, listaTareas.length)
 }
 
+//se vacia el formulario
 function limpiarFormulario(){
     formularioTarea.reset()
 }
 
 const cargarTarea = ()=>{
-    //verificar si tengo contactos para cargar
+    //verificar si tengo tareas para cargar
     tbody.innerHTML = "";
     if(listaTareas.length != 0){
-        //recorrer mi agenda y por cada elemento de la agenda 
+        //recorrer mi lista de tareas y por cada elemento de la lista 
         listaTareas.map((itemTarea, indice)=> dibujarFila(itemTarea, indice+1))
     }else{
-        //to do: dibujar un parrafo que diga que no tenemos contactos
+        //to do: dibujar un parrafo que diga que no tenemos tareas
         Swal.fire({
         title: "No hay tareas para mostrar",
-        icon: "success",
+        imageUrl: "https://png.pngtree.com/png-clipart/20231007/original/pngtree-helpless-emoticon-helpless-picture-image_13100937.png",
         confirmButtonText: "Ok",
     });
     }
     //si tengo, tengo que dibujar las filas en la tabla
 }
 
+//se dibuja/maqueta la fila dentro de la tabla
 const dibujarFila = (itemTarea, fila)=>{
     tbody.innerHTML += `
             <tr>
@@ -95,6 +98,7 @@ const dibujarFila = (itemTarea, fila)=>{
     `
 }
 
+//agregado de la funcionalidad del boton (mostrarTarea)
 window.mostrarTarea = (id) => {
   const tareas = listaTareas.find((tarea) => tarea.id === id);
   if (!tareas) return;
@@ -107,26 +111,27 @@ window.mostrarTarea = (id) => {
         </div>
       </nav>
     </header>
-    <main class="container mt-4">
-      <div class="card mt-3">
+    <main class="fondo">
+      <div class="card mt-5 container">
         <div class="card-body">
           <p class="text-center"> <----------------------------------------------------------------------------------------------> </p>
           <h2 class="card-title text-center mb-5 mt-5">"${tareas.nombre}"</h2>
           <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
-          <p class="card-text text-center mb-4"><strong>Descripcion:</strong> ${tareas.descripcion}</p>
+          <p class="card-text text-center mb-4"><strong>Descripcion de la tarea:</strong> ${tareas.descripcion}</p>
           <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
-          <p class="card-text text-center mb-4"><strong>Estado:</strong> ${tareas.estado}</p>
+          <p class="card-text text-center mb-4"><strong>Estado de la tarea:</strong> ${tareas.estado}</p>
           <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
-          <p class="card-text text-center mb-4"><strong>Fecha de creacion:</strong> ${tareas.creacion}</p>
+          <p class="card-text text-center mb-4"><strong>Fecha de creacion de la tarea:</strong> ${tareas.creacion}</p>
           <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
-          <p class="card-text text-center mb-4"><strong>Ultima modificacion:</strong> ${tareas.modificacion}</p>
+          <p class="card-text text-center mb-4"><strong>Fecha de la ultima modificacion de la tarea:</strong> ${tareas.modificacion}</p>
+          <p class="mb-4 text-center"> <----------------------------------------------------------------------------------------------> </p>
         </div>
+        <a href="./index.html" class="btn btn-info mb-4 container w-25">
+          <i class="bi bi-arrow-left"></i> Volver a la lista
+        </a>
       </div>
-      <a href="./index.html" class="btn btn-info mt-3 ">
-        <i class="bi bi-arrow-left"></i> Volver a la lista
-      </a>
     </main>
-    <footer class="bg-dark-subtle text-center py-4 mt-4">
+    <footer class="bg-dark-subtle text-center py-4">
       <p>&copy; Todos los derechos reservados</p>
     </footer>
   `;
@@ -199,7 +204,7 @@ const editarTarea = ()=>{
   //cerrar el modal
   modalFormularioTarea.hide()
 
-  //todo: mostrar una ventana de sweetAlert para indicar que elcontacto fue editado correctamente 
+  //todo: mostrar una ventana de sweetAlert para indicar que la tarea fue editada correctamente 
   Swal.fire({
   title: "Cambios guardados!",
   text: "Los cambios se guardaron correctamente",
@@ -230,4 +235,6 @@ formularioTarea.addEventListener('submit', (e)=>{
 })
 
 cargarTarea();
+
+
 
